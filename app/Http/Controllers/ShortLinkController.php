@@ -15,9 +15,10 @@ use Illuminate\Http\Response;
 class ShortLinkController extends Controller
 {
     public function __construct(
-        private readonly UserServiceContract $userService,
+        private readonly UserServiceContract      $userService,
         private readonly ShortLinkServiceContract $shortLinkService
-    ) {
+    )
+    {
         $this->middleware(['auth:sanctum']);
     }
 

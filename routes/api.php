@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
 Route::middleware('auth:sanctum')->name('api.')->group(function () {
+
     Route::get('/user', UserController::class)->name('user');
 
     Route::apiResource('short-links', ShortLinkController::class)
