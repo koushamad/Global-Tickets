@@ -15,10 +15,9 @@ use Illuminate\Http\Response;
 class ShortLinkController extends Controller
 {
     public function __construct(
-        private readonly UserServiceContract      $userService,
+        private readonly UserServiceContract $userService,
         private readonly ShortLinkServiceContract $shortLinkService
-    )
-    {
+    ) {
         $this->middleware(['auth:sanctum']);
     }
 
@@ -47,6 +46,7 @@ class ShortLinkController extends Controller
 
     /**
      * Display the specified resource.
+     *
      * @throws AuthorizationException
      */
     public function show(ShortLink $shortLink): ShortLinkResource
@@ -58,6 +58,7 @@ class ShortLinkController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
      * @throws AuthorizationException
      */
     public function update(UpdateshortLinkRequest $request, ShortLink $shortLink): ShortLinkResource
@@ -70,12 +71,14 @@ class ShortLinkController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
      * @throws AuthorizationException
      */
     public function destroy(ShortLink $shortLink): Response
     {
         $this->authorizeForUser(auth()->user(), 'delete', $shortLink);
         $this->shortLinkService->deleteShortLint($shortLink);
+
         return response()->noContent();
     }
 }

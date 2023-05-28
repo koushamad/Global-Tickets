@@ -4,7 +4,7 @@ use App\Models\ShortLink;
 use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-it('should show all user short links', function (){
+it('should show all user short links', function () {
     $shortLinksCount = 3;
     /** @var User $user */
     $user = User::factory()->hasShortLinks($shortLinksCount)->create();
@@ -22,7 +22,7 @@ it('should show all user short links', function (){
     });
 });
 
-it('should create a short link', function (){
+it('should create a short link', function () {
     /** @var User $user */
     /** @var ShortLink $shortLink */
     $user = User::factory()->create();
@@ -49,7 +49,7 @@ it('should create a short link', function (){
     ]);
 });
 
-it('should get a short link by id', function (){
+it('should get a short link by id', function () {
     /** @var User $user */
     /** @var ShortLink $shortLink */
     $user = User::factory()->create();
@@ -72,7 +72,7 @@ it('should get a short link by id', function (){
     });
 });
 
-it('should return not found when user want to get a short link that not exists', function (){
+it('should return not found when user want to get a short link that not exists', function () {
     /** @var User $user */
     $user = User::factory()->create();
 
@@ -81,7 +81,7 @@ it('should return not found when user want to get a short link that not exists',
     $response->assertNotFound();
 });
 
-it('should return forbidden when user want to get another user short link', function (){
+it('should return forbidden when user want to get another user short link', function () {
     /** @var User $user */
     /** @var User $anotherUser */
     /** @var ShortLink $shortLink */
@@ -94,7 +94,7 @@ it('should return forbidden when user want to get another user short link', func
     $response->assertForbidden();
 });
 
-it('should delete a short link', function (){
+it('should delete a short link', function () {
     /** @var User $user */
     /** @var ShortLink $shortLink */
     $user = User::factory()->create();
@@ -106,7 +106,7 @@ it('should delete a short link', function (){
     $this->assertNotNull($shortLink->refresh()->deleted_at);
 });
 
-it('should return forbidden when user want to delete another user short link', function (){
+it('should return forbidden when user want to delete another user short link', function () {
     /** @var User $user */
     /** @var User $anotherUser */
     /** @var ShortLink $shortLink */
@@ -119,7 +119,7 @@ it('should return forbidden when user want to delete another user short link', f
     $response->assertForbidden();
 });
 
-it('should return not found when user want to delete a short link that not exists', function (){
+it('should return not found when user want to delete a short link that not exists', function () {
     /** @var User $user */
     $user = User::factory()->create();
 
@@ -128,7 +128,7 @@ it('should return not found when user want to delete a short link that not exist
     $response->assertNotFound();
 });
 
-it('should update share link', function (){
+it('should update share link', function () {
     /** @var User $user */
     /** @var ShortLink $shortLink */
     $user = User::factory()->create();
@@ -153,7 +153,7 @@ it('should update share link', function (){
     });
 });
 
-it('should return forbidden when user want to update another user short link', function (){
+it('should return forbidden when user want to update another user short link', function () {
     /** @var User $user */
     /** @var User $anotherUser */
     /** @var ShortLink $shortLink */
@@ -168,7 +168,7 @@ it('should return forbidden when user want to update another user short link', f
     $response->assertForbidden();
 });
 
-it('should return not found when user want to update a short link that not exists', function (){
+it('should return not found when user want to update a short link that not exists', function () {
     /** @var User $user */
     $user = User::factory()->create();
 
@@ -177,4 +177,26 @@ it('should return not found when user want to update a short link that not exist
     ]);
 
     $response->assertNotFound();
+});
+
+it('should forward user to the original url', function () {
+    /** @var User $user */
+    /** @var ShortLink $shortLink */
+    $user = User::factory()->create();
+    $shortLink = ShortLink::factory()->for($user)->create();
+
+    $response = $this->get($shortLink->short_link_url);
+
+    $response->assertRedirect($shortLink->url);
+});
+
+it('should increase clicks when user visit the short link', function () {
+    /** @var User $user */
+    /** @var ShortLink $shortLink */
+    $user = User::factory()->create();
+    $shortLink = ShortLink::factory()->for($user)->create();
+
+    $this->get($shortLink->short_link_url);
+
+    $this->assertEquals($shortLink->clicks + 1, $shortLink->refresh()->clicks);
 });

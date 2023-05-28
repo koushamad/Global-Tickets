@@ -36,6 +36,7 @@ class ShortLink extends Model
     protected $appends = [
         'short_link_url',
     ];
+
     protected $casts = [
         'deleted_at' => 'datetime',
         'created_at' => 'datetime',
@@ -55,7 +56,6 @@ class ShortLink extends Model
      */
     public function getShortLinkUrlAttribute(): string
     {
-        return url('/short-link/' . $this->code);
+        return url('/sl/'.$this->code);
     }
-
 }

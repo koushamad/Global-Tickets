@@ -10,9 +10,7 @@ interface UserServiceContract
     /**
      * Return user with short links
      *
-     * @param int $id
      * @throws ModelNotFoundException
-     * @return User
      */
     public function getUserWithShotLinks(int $id): User;
 }
