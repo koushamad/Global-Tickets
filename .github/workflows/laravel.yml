@@ -1,0 +1,31 @@
+on:
+  pull_request:
+    branches: [master]
+name: Test CI
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.2
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts --dev
+          npm install
+          npm run build
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.ci .env
+          php artisan key:generate
+
+      - name: Run Code Style checker
+        run: ./vendor/bin/pint
+
+      - name: Run Testsuite
+        run: php artisan test
