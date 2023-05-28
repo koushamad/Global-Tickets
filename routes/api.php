@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\ShortLinkController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->name('api.')->group(function () {
+    Route::get('/user', UserController::class)->name('user');
+
+    Route::apiResource('short-links', ShortLinkController::class)
+        ->names([
+            'index' => 'short-links.index',
+            'show' => 'short-links.show',
+            'store' => 'short-links.store',
+            'update' => 'short-links.update',
+            'destroy' => 'short-links.destroy',
+        ]);
 });

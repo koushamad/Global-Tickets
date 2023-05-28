@@ -35,4 +35,22 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * Indicate that the model's email address should be verified.
+     */
+    public function verified(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email_verified_at' => now(),
+        ]);
+    }
+
+    /**
+     * Indicate that the model has short links.
+     */
+    public function hasShortLinks(int $count = 1): static
+    {
+        return $this->has(ShortLinkFactory::new()->count($count));
+    }
 }
