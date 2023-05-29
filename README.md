@@ -83,6 +83,7 @@ cp .env.docker .env
 docker-compose up -d
 ```
 #### Step 3: Wait for Docker to Complete All Tests
+![Screenshot 2023-05-29 at 12 47 43 PM](https://github.com/koushamad/Global-Tickets/assets/20081351/3a69ef34-c38f-4cb1-b6ea-2e5c9b3513a1)
 
 
 ## API Documentation
@@ -157,7 +158,12 @@ These routes provide CRUD operations for short-links.
 
   **Route Name:** `api.short-links.destroy`
 
-These routes should be prefixed with the base URL to form complete endpoints. For instance, to get the user details, the full URL will be `/api/user`.
+These routes should be prefixed with the base URL to form complete endpoints. For instance, to get the user details,
+
+
+ the full URL will be `/api/user`.
 
 
 ## Frontend Demo
+https://github.com/koushamad/Global-Tickets/assets/20081351/c432b671-de84-473c-be5d-bcf00dd3e3f8
+
