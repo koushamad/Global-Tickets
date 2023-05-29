@@ -1,66 +1,163 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Assessment Overview
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Objective
+This assessment aims to evaluate your back-end development expertise. You're expected to build a simplified application that allows users to manage shortened URLs. Preferred tech stack includes Laravel or plain PHP. Comprehensive documentation using Docblocks is a requirement for all functionalities.
 
-## About Laravel
+### Core Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. User Registration and Authentication: Users should be able to register and log into the application.
+2. Shortened URLs Dashboard: A view should be available to display all the shortened URLs created by a user.
+3. CRUD Operations for Shortened URLs: Users must be able to create, edit, and delete shortened URLs.
+4. URL Redirection: The system should correctly redirect from the shortened URL to the original target URL.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Deliverables
+- A functional application embodying all of the features mentioned above.
+- Detailed instructions on how to run your application.
+- Documentation or Docblocks outlining your coding practices and decisions.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Styling Guidelines
+- While styling is optional, incorporating it can potentially earn you extra points.
+- You may use styling frameworks, with Laravel Breeze being a recommended option.
+- Ensure that all your code compiles without errors.
 
-## Learning Laravel
+### Tips
+- Consider using Laravel Valet and MySQL for your application.
+- MAMP or similar interfaces can be used to manage your database.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Bonus Objectives
+- API CRUD endpoint
+- Seeder for URLs and users
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Implementation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+In this project, the tools employed include Laravel, Vue, Laravel Breeze for authentication, Laravel Sanctum for API authentication, Laravel Pest for testing, Laravel Valet for local development, and Laravel Pint for Code Style,  MySQL for database management, Docker for application deployment, and Tailwind CSS for styling, and CI/CD with GitHub Actions.
 
-## Laravel Sponsors
+During development, Test-Driven Development (TDD), Domain-Driven Design (DDD), and SOLID principles were followed. To enhance the shortened URL forwarding process, caching was utilized, with Redis serving as the cache resource in Docker-based deployments.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Setup Instructions
 
-### Premium Partners
+### Prerequisites
+- PHP 8.1
+- Composer
+- MySQL
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Local Environment Setup
+#### Step 1: Clone the Repository
+```bash
+git clone git@github.com:koushamad/Global-Tickets.git
+cd Global-Tickets
+cp .env.example .env
+```
+#### Step 2: Set Up Database Credentials
+Modify the `.env` file to include your database credentials.
 
-## Contributing
+#### Step 3: Install Dependencies and Run Migrations
+```bash
+composer install
+php artisan key:generate
+php artisan migrate
+php artisan db:seed
+php artisan test
+```
+#### Step 4: Install npm Dependencies
+```bash
+npm install
+npm build
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Step 5: Start the Server
+```bash
+valet install
+valet links
+```
 
-## Code of Conduct
+### Docker Setup
+#### Step 1: Clone the Repository
+```bash
+git clone git@github.com:koushamad/Global-Tickets.git
+cd Global-Tickets
+cp .env.docker .env
+```
+#### Step 2: Launch Docker
+```bash
+docker-compose up -d
+```
+#### Step 3: Wait for Docker to Complete All Tests
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+## API Documentation
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+The API uses Laravel Sanctum for authentication. Below is the list of API routes:
 
-## License
+- **Base URL**: `/api`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### User Routes
+
+- **Get User Details**
+
+  **Endpoint:** `GET /user`
+
+  **Required Authentication:** Yes
+
+  **Description:** Returns details of the authenticated user.
+
+  **Route Name:** `api.user`
+
+### Short-Link Routes
+
+These routes provide CRUD operations for short-links.
+
+- **Get All Short Links**
+
+  **Endpoint:** `GET /short-links`
+
+  **Required Authentication:** Yes
+
+  **Description:** Retrieves a list of all short-links created by the authenticated user.
+
+  **Route Name:** `api.short-links.index`
+
+- **Get Specific Short Link**
+
+  **Endpoint:** `GET /short-links/{id}`
+
+  **Required Authentication:** Yes
+
+  **Description:** Retrieves details of a specific short link created by the authenticated user.
+
+  **Route Name:** `api.short-links.show`
+
+- **Create Short Link**
+
+  **Endpoint:** `POST /short-links`
+
+  **Required Authentication:** Yes
+
+  **Description:** Creates a new short-link.
+
+  **Route Name:** `api.short-links.store`
+
+- **Update Short Link**
+
+  **Endpoint:** `PUT /short-links/{id}`
+
+  **Required Authentication:** Yes
+
+  **Description:** Updates a specific short-link.
+
+  **Route Name:** `api.short-links.update`
+
+- **Delete Short Link**
+
+  **Endpoint:** `DELETE /short-links/{id}`
+
+  **Required Authentication:** Yes
+
+  **Description:** Deletes a specific short-link.
+
+  **Route Name:** `api.short-links.destroy`
+
+These routes should be prefixed with the base URL to form complete endpoints. For instance, to get the user details, the full URL will be `/api/user`.
+
+
+## Frontend Demo

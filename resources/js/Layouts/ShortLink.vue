@@ -112,10 +112,11 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                         <tr v-for="shortLink in shortLinks" :key="shortLink.id">
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ shortLink.url }}</td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{
-                                    shortLink.short_link_url
-                                }}
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                <a :href="shortLink.url" target="_blank">{{ shortLink.url }}</a>
+                            </td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                <a :href="shortLink.short_link_url" target="_blank">{{ shortLink.short_link_url }}</a>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ shortLink.clicks }}</td>
                             <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">

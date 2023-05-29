@@ -12,7 +12,6 @@ class ShortLinkForwarderController extends Controller
     public function __construct(
         private readonly ShortLinkServiceContract $shortLinkService
     ) {
-        $this->middleware(['guest']);
     }
 
     public function __invoke(string $code): Application|Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application

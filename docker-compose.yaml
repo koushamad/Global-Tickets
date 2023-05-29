@@ -1,0 +1,158 @@
+version: "3.8"
+services:
+  app:
+    container_name: global_tickets_app
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    expose:
+      - 9000
+    volumes:
+      - .:/usr/src/app
+      - ./public:/usr/src/app/public
+    depends_on:
+      - db
+      - caching
+    networks:
+      - global_tickets_app_network
+
+  worker:
+    container_name: global_tickets_worker
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - ./public:/usr/src/app/public
+    command: php artisan queue:work
+    depends_on:
+      - app
+    networks:
+      - global_tickets_app_network
+
+  schedule:
+    container_name: global_tickets_schedule
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - ./public:/usr/src/app/public
+    command: php artisan schedule:work
+    depends_on:
+      - worker
+    networks:
+      - global_tickets_app_network
+
+  migration:
+    container_name: global_tickets_migration
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - ./public:/usr/src/app/public
+    entrypoint: [ "bash", "-c", "sleep 20 && php artisan migrate && php artisan db:seed"]
+    depends_on:
+      - schedule
+    networks:
+      - global_tickets_app_network
+
+  test:
+    container_name: global_tickets_test
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - ./public:/usr/src/app/public
+    entrypoint: [ "bash", "-c", "sleep 30 && php artisan test"]
+    depends_on:
+      - migration
+    networks:
+      - global_tickets_app_network
+
+  react:
+    container_name: global_tickets_react
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - ./public:/usr/src/app/public
+    ports:
+      - "5173:5173"
+    command: laravel
+    entrypoint: npm run dev
+    depends_on:
+      - test
+    networks:
+      - global_tickets_app_network
+
+  webserver:
+    container_name: global_tickets_webserver
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    volumes:
+      - ./public:/usr/src/app/public
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    environment:
+      NGINX_FPM_HOST: global_tickets_app
+      NGINX_ROOT: /usr/src/app/public
+    networks:
+      - global_tickets_app_network
+
+  db:
+    container_name: global_tickets_mysql
+    image: mysql:latest
+    restart: always
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - global_tickets_app_network
+
+  caching:
+    container_name: global_tickets_redis
+    image: redis:latest
+    command: redis-server --appendonly yes --replica-read-only no --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - caching_data:/data
+    ports:
+      - 6379:6379
+    networks:
+      - global_tickets_app_network
+
+  netdata:
+    container_name: global_tickets_netdata
+    image: netdata/netdata
+    ports:
+      - 19999:19999
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    networks:
+      - global_tickets_app_network
+
+networks:
+  global_tickets_app_network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+
+  caching_data:
+    driver: local
