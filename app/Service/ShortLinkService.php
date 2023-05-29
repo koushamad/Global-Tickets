@@ -18,12 +18,14 @@ class ShortLinkService implements ShortLinkServiceContract
     public function createShortLink(string $url, User $user): ShortLink
     {
         /** @var ShortLink $shortLink */
+        // Create short link.
         $shortLink = $user->shortLinks()->create([
             'url' => $url,
             'user_id' => $user->id,
             'code' => $this->generateShortCode(),
         ]);
 
+        // Add to cache.
         Cache::put($this->getCacheKey($shortLink->code), $shortLink->url, now()->addDays(7));
 
         return $shortLink;
@@ -34,9 +36,11 @@ class ShortLinkService implements ShortLinkServiceContract
      */
     public function updateShortLink(string $url, ShortLink $shortLink): ShortLink
     {
+        // Update short link.
         $shortLink->url = $url;
         $shortLink->save();
 
+        // Update cache.
         Cache::put($this->getCacheKey($shortLink->code), $shortLink->url, now()->addDays(7));
 
         return $shortLink;
@@ -47,7 +51,7 @@ class ShortLinkService implements ShortLinkServiceContract
      */
     public function deleteShortLint(ShortLink $shortLink): void
     {
-
+        // Remove from cache.
         Cache::forget($shortLink->code);
 
         $shortLink->delete();
@@ -60,10 +64,12 @@ class ShortLinkService implements ShortLinkServiceContract
      */
     public function getShortLink(string $code): string
     {
+        // Dispatch job on application terminating.
         app()->terminating(function () use ($code) {
             ShortLinkClickedJob::dispatch($code);
         });
 
+        // Return cached value if exists.
         return Cache::remember($this->getCacheKey($code), now()->addDays(7), function () use ($code) {
             /** @var ShortLink $sortLink */
             $sortLink = ShortLink::query()->where('code', $code)->firstOrFail();
@@ -79,6 +85,7 @@ class ShortLinkService implements ShortLinkServiceContract
      */
     public function incrementShortLinkClick(string $code): void
     {
+        // Find the short link and increment clicks count.
         $shortLink = ShortLink::query()->where('code', $code)->firstOrFail();
         $shortLink->increment('clicks');
         $shortLink->save();
@@ -89,8 +96,10 @@ class ShortLinkService implements ShortLinkServiceContract
      */
     private function generateShortCode(): string
     {
+        // Generate random string.
         $shortCode = str()->random(6);
 
+        // Check if the code exists.
         if (ShortLink::query()->where('code', $shortCode)->first()) {
             return $this->generateShortCode();
         }
@@ -103,6 +112,7 @@ class ShortLinkService implements ShortLinkServiceContract
      */
     private function getCacheKey(string $code): string
     {
+        // Return cache key.
         return "short_link_{$code}";
     }
 }
